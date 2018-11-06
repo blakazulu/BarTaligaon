@@ -288,8 +288,12 @@ main {
 	color: red;
 }
 
-.slide_title_white {
+.slide_title_smoke {
 	color: rgba(245, 233, 233, 0.726);
+}
+
+.slide_title_white {
+	color: white;
 }
 
 .slide_title_orange {
@@ -504,6 +508,88 @@ main {
 	background: #000;
 	padding: 1rem;
 	color: #fff;
+}
+
+.button_red {
+	-webkit-animation: glowing_red 1500ms infinite;
+	-moz-animation: glowing_red 1500ms infinite;
+	-o-animation: glowing_red 1500ms infinite;
+	animation: glowing_red 1500ms infinite;
+}
+
+.button_blue {
+	-webkit-animation: glowing_blue 1500ms infinite;
+	-moz-animation: glowing_blue 1500ms infinite;
+	-o-animation: glowing_blue 1500ms infinite;
+	animation: glowing_blue 1500ms infinite;
+}
+
+.button {
+	-webkit-border-radius: 10px;
+	border-radius: 10px;
+	border: none;
+	color: #FFFFFF;
+	cursor: pointer;
+	display: inline-block;
+	font-family: Arial;
+	padding: 5px 10px;
+	text-align: center;
+	text-decoration: none;
+  }
+
+
+  @-webkit-keyframes glowing_red {
+	0% { background-color: #B20000; -webkit-box-shadow: 0 0 3px #B20000; }
+	50% { background-color: #FF0000; -webkit-box-shadow: 0 0 40px #FF0000; }
+	100% { background-color: #B20000; -webkit-box-shadow: 0 0 3px #B20000; }
+  }
+  
+  @-moz-keyframes glowing_red {
+	0% { background-color: #B20000; -moz-box-shadow: 0 0 3px #B20000; }
+	50% { background-color: #FF0000; -moz-box-shadow: 0 0 40px #FF0000; }
+	100% { background-color: #B20000; -moz-box-shadow: 0 0 3px #B20000; }
+  }
+  
+  @-o-keyframes glowing_red {
+	0% { background-color: #B20000; box-shadow: 0 0 3px #B20000; }
+	50% { background-color: #FF0000; box-shadow: 0 0 40px #FF0000; }
+	100% { background-color: #B20000; box-shadow: 0 0 3px #B20000; }
+  }
+  
+  @keyframes glowing_red {
+	0% { background-color: #B20000; box-shadow: 0 0 3px #B20000; }
+	50% { background-color: #FF0000; box-shadow: 0 0 40px #FF0000; }
+	100% { background-color: #B20000; box-shadow: 0 0 3px #B20000; }
+  }
+
+  @-webkit-keyframes glowing_blue {
+	0% { background-color: #0000B2; -webkit-box-shadow: 0 0 3px #0000B2; }
+	50% { background-color: #0000FF; -webkit-box-shadow: 0 0 40px #0000FF#0000FF; }
+	100% { background-color: #0000B2; -webkit-box-shadow: 0 0 3px #0000B2; }
+  }
+  
+  @-moz-keyframes glowing_blue {
+	0% { background-color: #0000B2; -moz-box-shadow: 0 0 3px #0000B2; }
+	50% { background-color: #0000FF; -moz-box-shadow: 0 0 40px #0000FF; }
+	100% { background-color: #0000B2; -moz-box-shadow: 0 0 3px #0000B2; }
+  }
+  
+  @-o-keyframes glowing_blue {
+	0% { background-color: #0000B2; box-shadow: 0 0 3px #0000B2; }
+	50% { background-color: #0000FF; box-shadow: 0 0 40px #0000FF; }
+	100% { background-color: #0000B2; box-shadow: 0 0 3px #0000B2; }
+  }
+  
+  @keyframes glowing_blue {
+	0% { background-color: #0000B2; box-shadow: 0 0 3px #0000B2; }
+	50% { background-color: #0000FF; box-shadow: 0 0 40px #0000FF; }
+	100% { background-color: #0000B2; box-shadow: 0 0 3px #0000B2; }
+  }
+
+@media screen and (max-width: 860px){
+	.action--details, .details-wrap {
+		display: none;
+	}
 }
 
 @media screen and (min-width: 53em) {
