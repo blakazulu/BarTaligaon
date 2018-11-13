@@ -10,6 +10,7 @@
 	<meta name="author" content="Codrops" />
 	<link rel="shortcut icon" href="favicon.ico">
 	<link rel="stylesheet" type="text/css" href="css/base.css" />
+	<link href="https://fonts.googleapis.com/css?family=Varela+Round&amp;subset=hebrew" rel="stylesheet">
 	<script>
 		document.documentElement.className = "js";
 		var supportsCssVars = function () {
@@ -57,7 +58,8 @@
 
 		<div class="content content--fixed">
 			<div class="codrops-header">
-				<h2 class="button button_blue codrops-header__title">בר טליגאון - טכנאי מחשבים</h2>
+					<h1 class="h1_special" data-title="בר טליגאון"> <a href="#"> בר טליגאון </a> </h1>
+				<!-- <h2 class="letter slide_title_blue codrops-header__title">בר טליגאון - טכנאי מחשבים</h2> -->
 			</div>
 			<div class="page-header">
 				<h1 class="page-header__title">
@@ -95,7 +97,7 @@
 					<div class="slide__img" style="background-image: url(img/2.jpg);"></div>
 					<div class="slide__title-wrap">
 						<br>
-						<h3 class="slide__title slide_title_smoke">ניידים</h3>
+						<h3 class="slide__title slide_title_blue">ניידים</h3>
 					</div>
 
 				</div>
@@ -104,7 +106,7 @@
 				<div class="slide__wrap">
 					<div class="slide__img" style="background-image: url(img/1.jpg);"></div>
 					<div class="slide__title-wrap">
-						<h3 class="slide__title slide_title_red">Gaming</h3>
+						<h3 class="slide__title slide_title_red">חלקי מחשב</h3>
 					</div>
 				</div>
 			</div>
@@ -135,8 +137,8 @@
 				</svg>
 			</button>
 			<div class="boxnav__item boxnav__item--label">
-				<span class="boxnav__label boxnav__label--current">1</span>
-				<span class="boxnav__label boxnav__label--total"></span>
+				<span class="boxnav__label boxnav__label--current" hidden></span>
+				<span class="boxnav__label boxnav__label--total" hidden></span>
 			</div>
 			<button class="boxnav__item boxnav__item--next">
 				<svg class="icon icon--caret-rot">
