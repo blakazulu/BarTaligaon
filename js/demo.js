@@ -1,364 +1,295 @@
-/**
- * demo.js
- * http://www.codrops.com
- *
- * Licensed under the MIT license.
- * http://www.opensource.org/licenses/mit-license.php
- * 
- * Copyright 2018, Codrops
- * http://www.codrops.com
- */
-{
-    // The Slide (Product) class.
-    class Slide {
-        constructor(el, settings) {
-            this.DOM = {el: el};
-            
-            this.settings = {
-                detailsEl: null,
-                onHideDetails: () => {return false;}
-            }
-            Object.assign(this.settings, settings);
+<!DOCTYPE html>
+<html lang="en" class="no-js">
 
-            // The slide´s container.
-            this.DOM.wrap = this.DOM.el.querySelector('.slide__wrap');
-            // The image element.
-            this.DOM.img = this.DOM.wrap.querySelector('.slide__img');
-            // The title container.
-            this.DOM.titleWrap = this.DOM.wrap.querySelector('.slide__title-wrap');
-            // The details boxes.
-            this.DOM.detailsItems = Array.from(this.settings.detailsEl.querySelectorAll('.details__item'));
-            this.totalDetailItems = this.DOM.detailsItems.length;
-            // The details box that has the close control. When clicking on it call the onHideDetails passed in the initialization options.
-            this.DOM.hideDetailsCtrl = this.DOM.detailsItems.filter(item => item.classList.contains('details__item--close'))[0];
-            this.DOM.hideDetailsCtrl.addEventListener('click', () => this.settings.onHideDetails());
-            // Some config values.
-            this.config = {
-                animation: {
-                    duration: 1.2,
-                    ease: Expo.easeInOut
-				}
-            };
-        }
-        // Sets the current class.
-		setCurrent(isCurrent = true) {
-			this.DOM.el.classList[isCurrent ? 'add' : 'remove']('slide--current');
-		}
-        // Hide the slide.
-        hide(direction) {
-			return this.toggle('hide', direction);
-        }
-        // Show the slide.
-        show(direction) {
-            this.DOM.el.style.zIndex = 1000;
-            return this.toggle('show', direction);
-        }
-        // Show/Hide the slide.
-        toggle(action, direction) {
-			return new Promise((resolve, reject) => {
-                // When showing a slide, the slide´s container will move 100% from the right or left depending on the direction.
-                // At the same time, both title wrap and the image will move the other way around thus creating the unreveal effect.
-                // Also, when showing or hiding a slide, we scale it from or to a value of 1.1.
-                if ( action === 'show' ) {
-                    TweenMax.to(this.DOM.wrap, this.config.animation.duration, {
-                        ease: this.config.animation.ease,
-                        startAt: {x: direction === 'right' ? '100%' : '-100%'},
-                        x: '0%'
-                    });
-                    TweenMax.to(this.DOM.titleWrap, this.config.animation.duration, {
-                        ease: this.config.animation.ease,
-                        startAt: {x: direction === 'right' ? '-100%' : '100%'},
-                        x: '0%'
-                    });
-                }
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Bar Taligaon | Computer Tech</title>
+	<meta name="description" content="בר טליגאון - טכנאי מחשבים" />
+	<meta name="keywords" content="bar, taligaon, computer" />
+	<meta name="author" content="Codrops" />
+	<link rel="shortcut icon" href="favicon.ico">
+	<link rel="stylesheet" type="text/css" href="css/base.css" />
+	<link href="https://fonts.googleapis.com/css?family=Varela+Round&amp;subset=hebrew" rel="stylesheet">
+	<script>
+		document.documentElement.className = "js";
+		var supportsCssVars = function () {
+			var e, t = document.createElement("style");
+			return t.innerHTML = "root: { --tmp-var: bold; }", document.head.appendChild(t), e = !!(window.CSS && window.CSS.supports &&
+				window.CSS.supports("font-weight", "var(--tmp-var)")), t.parentNode.removeChild(t), e
+		};
+		supportsCssVars() || alert("Please view this demo in a modern browser that supports CSS Variables.");
+	</script>
+</head>
 
-                TweenMax.to(this.DOM.img, this.config.animation.duration, {
-                    ease: this.config.animation.ease,
-                    startAt: action === 'hide' ? {} : {x: direction === 'right' ? '-100%' : '100%', scale: 1.1},
-                    x: '0%',
-                    scale: action === 'hide' ? 1.1 : 1,
-                    onStart: () => {
-                        this.DOM.img.style.transformOrigin = action === 'hide' ? 
-                                                                direction === 'right' ? '100% 50%' : '0% 50%':
-                                                                direction === 'right' ? '0% 50%' : '100% 50%';
-                        this.DOM.el.style.opacity = 1;
-                    },
-                    onComplete: () => {
-                        this.DOM.el.style.zIndex = 999;
-                        this.DOM.el.style.opacity = action === 'hide' ? 0 : 1;
-                        resolve();
-                    }
-                });
-            });
-        }
-        // Show the details boxes.
-        showDetails() {
-            return new Promise((resolve, reject) => {
-                // If open already then do nothing.
-                if ( this.isDetailsOpen ) {
-                    resolve();
-                    return false;
-                }
+<body class="loading">
+	<svg class="hidden">
+		<symbol id="icon-arrow" viewBox="0 0 24 24">
+			<title>arrow</title>
+			<polygon points="6.3,12.8 20.9,12.8 20.9,11.2 6.3,11.2 10.2,7.2 9,6 3.1,12 9,18 10.2,16.8 " />
+		</symbol>
+		<symbol id="icon-drop" viewBox="0 0 24 24">
+			<title>drop</title>
+			<path d="M12,21c-3.6,0-6.6-3-6.6-6.6C5.4,11,10.8,4,11.4,3.2C11.6,3.1,11.8,3,12,3s0.4,0.1,0.6,0.3c0.6,0.8,6.1,7.8,6.1,11.2C18.6,18.1,15.6,21,12,21zM12,4.8c-1.8,2.4-5.2,7.4-5.2,9.6c0,2.9,2.3,5.2,5.2,5.2s5.2-2.3,5.2-5.2C17.2,12.2,13.8,7.3,12,4.8z" />
+			<path d="M12,18.2c-0.4,0-0.7-0.3-0.7-0.7s0.3-0.7,0.7-0.7c1.3,0,2.4-1.1,2.4-2.4c0-0.4,0.3-0.7,0.7-0.7c0.4,0,0.7,0.3,0.7,0.7C15.8,16.5,14.1,18.2,12,18.2z" />
+		</symbol>
+		<symbol id="icon-instagram" viewBox="0 0 24 24">
+			<title>instagram</title>
+			<path d="M17 1h-10c-3.3 0-6 2.7-6 6v10c0 3.3 2.7 6 6 6h10c3.3 0 6-2.7 6-6v-10c0-3.3-2.7-6-6-6zM21 17c0 2.2-1.8 4-4 4h-10c-2.2 0-4-1.8-4-4v-10c0-2.2 1.8-4 4-4h10c2.2 0 4 1.8 4 4v10z"></path>
+			<path d="M12.8 7c-0.5-0.1-1-0.1-1.5 0-2.7 0.4-4.6 3-4.2 5.7 0.2 1.3 0.9 2.5 2 3.3 0.9 0.6 1.9 1 3 1 0.2 0 0.5 0 0.7-0.1 1.3-0.2 2.5-0.9 3.3-2s1.1-2.4 0.9-3.7c-0.3-2.2-2-3.9-4.2-4.2zM14.5 13.7c-0.5 0.6-1.2 1.1-2 1.2-1.6 0.2-3.2-0.9-3.4-2.5-0.3-1.6 0.9-3.2 2.5-3.4 0.1 0 0.3 0 0.4 0s0.3 0 0.4 0c1.3 0.2 2.3 1.2 2.5 2.5 0.2 0.8 0 1.6-0.4 2.2z"></path>
+			<path d="M16.8 5.8c-0.2 0.2-0.3 0.4-0.3 0.7s0.1 0.5 0.3 0.7c0.2 0.2 0.5 0.3 0.7 0.3 0.3 0 0.5-0.1 0.7-0.3s0.3-0.5 0.3-0.7c0-0.3-0.1-0.5-0.3-0.7-0.4-0.4-1-0.4-1.4 0z"></path>
+		</symbol>
+		<symbol id="icon-facebook" viewBox="0 0 24 24">
+			<title>facebook</title>
+			<path d="M18 7c0.6 0 1-0.4 1-1v-4c0-0.6-0.4-1-1-1h-3c-3.3 0-6 2.7-6 6v2h-2c-0.6 0-1 0.4-1 1v4c0 0.6 0.4 1 1 1h2v7c0 0.6 0.4 1 1 1h4c0.6 0 1-0.4 1-1v-7h2c0.5 0 0.9-0.3 1-0.8l1-4c0.1-0.3 0-0.6-0.2-0.9s-0.5-0.3-0.8-0.3h-3v-2h3zM14 11h2.7l-0.5 2h-2.2c-0.6 0-1 0.4-1 1v7h-2v-7c0-0.6-0.4-1-1-1h-2v-2h2c0.6 0 1-0.4 1-1v-3c0-2.2 1.8-4 4-4h2v2h-2c-1.1 0-2 0.9-2 2v3c0 0.6 0.4 1 1 1z" />
+		</symbol>
+		<symbol id="icon-cart">
+			<title>cart</title>
+			<path d="M11 21c0 1.105-0.895 2-2 2s-2-0.895-2-2c0-1.105 0.895-2 2-2s2 0.895 2 2z"></path>
+			<path d="M22 21c0 1.105-0.895 2-2 2s-2-0.895-2-2c0-1.105 0.895-2 2-2s2 0.895 2 2z"></path>
+			<path d="M23.8 5.4c-0.2-0.3-0.5-0.4-0.8-0.4h-16.2l-0.8-4.2c-0.1-0.5-0.5-0.8-1-0.8h-4c-0.6 0-1 0.4-1 1s0.4 1 1 1h3.2l0.8 4.2c0 0 0 0.1 0 0.1l1.7 8.3c0.3 1.4 1.5 2.4 2.9 2.4 0 0 0 0 0.1 0h9.7c1.5 0 2.7-1 3-2.4l1.6-8.4c0-0.3 0-0.6-0.2-0.8zM20.4 14.2c-0.1 0.5-0.5 0.8-1 0.8h-9.7c-0.5 0-0.9-0.3-1-0.8l-1.5-7.2h14.6l-1.4 7.2z"></path>
+		</symbol>
+		<symbol id="icon-caret" viewBox="0 0 16 24">
+			<title>caret</title>
+			<path d="M15.45 2.8L12.65 0l-12 12 12 12 2.8-2.8-9.2-9.2z" />
+		</symbol>
+	</svg>
+	<main>
 
-                // We want to achieve here the same reveal/unreveal effect of the slideshow.
-                // The item animates from 100% to 0% (top,bottom,left or right) while its inner element does the reverse movement.
-                const processItem = (item,pos) => {
-                    return new Promise((resolve, reject) => {
-                        // The duration and easing for the last 3 elements will be different to create a different feeling for the animation.
-                        const duration = pos >= this.totalDetailItems-3 ? 0.7 : 0.2;
-                        const ease = pos >= this.totalDetailItems-3 ? 'Expo.easeOut' : 'Power2.easeInOut';
-                        // Every box will have a delay. 
-                        const delay = pos*0.08;
-                        // The direction to animate the box. We can specify this as a data attribute otherwise we assume a default of rtl ("right to left")
-                        // right to left (rtl) | left to right (ltr) | bottom to top (btt) | top to bottom (ttb).
-                        const direction = item.dataset.direction || 'rtl';
-                        
-                        let itemAnimOpts = {
-                            ease: ease,
-                            delay: delay,
-                            x: '0%',
-                            y: '0%'
-                        };
-                        
-                        let innerAnimOpts = {
-                            ease: ease,
-                            delay: delay,
-                            x: '0%',
-                            y: '0%',
-                            onComplete: resolve
-                        };
+		<div class="content content--fixed">
+			<div class="codrops-header">
+					<h1 class="h1_special" data-title="בר טליגאון"> <a href="#"> בר טליגאון </a> </h1>
+				<!-- <h2 class="letter slide_title_blue codrops-header__title">בר טליגאון - טכנאי מחשבים</h2> -->
+			</div>
+			<div class="page-header">
+				<h1 class="page-header__title">
+					<span class="page-header__title-inner">Bar</span>
+					<span class="page-header__title-sub">052-5701140</span>
+				</h1>
+				<ul class="social">
+					<li class="social__item">
+						<a class="social__item-link" target="_blank" href="https://wa.me/9725701140">
+							<svg class="icon icon--social icon--whatsapp">
+							</svg>
+						</a>
+					</li>
+					<li class="social__item">
+						<a class="social__item-link" target="_blank" href="https://www.instagram.com/bar_digital/">
+							<svg class="icon icon--social icon--instagram">
+								<use xlink:href="#icon-instagram"></use>
+							</svg>
+						</a>
+					</li>
+					<li class="social__item">
+						<a class="social__item-link" target="_blank" href="https://www.facebook.com/Bar_digital-2172821509616534/?__tn__=K-R&eid=ARAhFJrIQIo3iTgPK6te7KHFz9tyUQtlIyo0C-hjOTpRHSzi1ZgZ4QwHtJbYSm2rVY3JZTc3FiWgG0xi&fref=mentions&__xts__[0]=68.ARBnCQMa70v_kWxnf4flOENeA3AqTAzkYb5eLcP_2748YLMo6qQFXwFMnLAtpjlCTKB5gGeQ89ldzWZneNrEnfq6tVMxk_fCxSKe8YxvupkYDI20WpXxDlTynvShj-Eny3NJ1qUATDwXhI6iQVn_gDhfK3JMEmWpuBH9dzA5kSKzEVDV55QxioeCRwm3GgCob2P43SOyeje2vcum8hMWnDY">
+							<svg class="icon icon--social icon--facebook">
+								<use xlink:href="#icon-facebook"></use>
+							</svg>
+						</a>
+					</li>
+				</ul>
+			</div>
+			<p class="tagline">Bar Taligaon</p>
+		</div>
+		<div class="slideshow">
+			<div class="slide">
+				<div class="slide__wrap">
+					<div class="slide__img" style="background-image: url(img/2.jpg);"></div>
+					<div class="slide__title-wrap">
+						<br>
+						<h3 class="slide__title slide_title_blue">ניידים</h3>
+					</div>
 
-                        if ( direction === 'rtl' || direction === 'ltr' ) {
-                            itemAnimOpts.startAt = direction === 'rtl' ? {x: '100%', y: '0%'} : {x: '-100%', y: '0%'};
-                            innerAnimOpts.startAt= direction === 'rtl' ? {x: '-100%', y: '0%'} : {x: '100%', y: '0%'};
-                        }
-                        else {
-                            itemAnimOpts.startAt = direction === 'btt' ? {x: '0%', y: '100%'} : {x: '0%',y: '-100%'};
-                            innerAnimOpts.startAt = direction === 'btt' ? {x: '0%', y: '-100%'} : {x: '0%', y: '100%'};
-                        }
+				</div>
+			</div>
+			<div class="slide">
+				<div class="slide__wrap">
+					<div class="slide__img" style="background-image: url(img/1.jpg);"></div>
+					<div class="slide__title-wrap">
+						<h3 class="slide__title slide_title_red">חלקי מחשב</h3>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<div class="slide__wrap">
+					<div class="slide__img" style="background-image: url(img/3.jpg);"></div>
+					<div class="slide__title-wrap">
+						<br><br>
+						<h3 class="slide__title slide_title_white">?המחשב איטי</h3>
+						<h4 class="slide__subtitle slide_title_white" style="text-align: right">לא צריך לשבור אותו</h4>
+					</div>
+				</div>
+			</div>
+			<div class="slide">
+				<div class="slide__wrap">
+					<div class="slide__img" style="background-image: url(img/4.jpg);"></div>
+					<div class="slide__title-wrap">
+						<br><br><br>
+						<h3 class="slide__title slide_title_orange">אביזרים</h3>
+					</div>
+				</div>
+			</div>
+		</div><!-- /slideshow -->
+		<nav class="boxnav">
+			<button class="boxnav__item boxnav__item--prev">
+				<svg class="icon icon--caret">
+					<use xlink:href="#icon-caret"></use>
+				</svg>
+			</button>
+			<div class="boxnav__item boxnav__item--label">
+				<span class="boxnav__label boxnav__label--current" hidden></span>
+				<span class="boxnav__label boxnav__label--total" hidden></span>
+			</div>
+			<button class="boxnav__item boxnav__item--next">
+				<svg class="icon icon--caret-rot">
+					<use xlink:href="#icon-caret"></use>
+				</svg>
+			</button>
+		</nav>
+		<button class="button button_red action action--details">+</button>
+		<!-- details -->
+		<div class="details-wrap">
+			<div class="details">
+				<div class="details__item details__item-img" data-direction="ttb">
+					<div class="details__inner">
+						<img src="img/small/1.jpg" alt="Some image" />
+					</div>
+				</div>
+				<div class="details__item details__item-sizes">
+					<div class="details__inner details__inner--sizes">
+						<img src="img/reviews/2.jpg" alt="Some image" />
+					</div>
+				</div>
+				<div class="details__item details__item--addtocart" data-direction="ttb">
+					<div class="details__inner">
+						<button class="action action--addtocart">
+							<img src="img/reviews/3.jpg" alt="Some image" />
+						</button>
+					</div>
+				</div>
+				<div class="details__item details__item-colors" data-direction="ttb">
+					<div class="details__inner details__inner--grid details__inner--colors">
+						<img src="img/reviews/1.jpg" alt="Some image" />
+					</div>
+				</div>
+				<div class="details__item details__item-price">
+					<div class="details__inner details__inner--price">
+						<img src="img/reviews/4.jpg" alt="Some image" />
+					</div>
+				</div>
+				<div class="details__item details__item--close" data-direction="ttb">
+					<div class="details__inner">
+						<button class="action action--close">Close</button>
+					</div>
+				</div>
+			</div><!-- /details -->
+			<div class="details">
+				<div class="details__item details__item-img" data-direction="ttb">
+					<div class="details__inner">
+						<img src="img/small/1.jpg" alt="Some image" />
+					</div>
+				</div>
+				<div class="details__item details__item-sizes">
+					<div class="details__inner details__inner--sizes">
+						<img src="img/reviews/2.jpg" alt="Some image" />
+					</div>
+				</div>
+				<div class="details__item details__item--addtocart" data-direction="ttb">
+					<div class="details__inner">
+						<button class="action action--addtocart">
+							<img src="img/reviews/3.jpg" alt="Some image" />
+						</button>
+					</div>
+				</div>
+				<div class="details__item details__item-colors" data-direction="ttb">
+					<div class="details__inner details__inner--grid details__inner--colors">
+						<img src="img/reviews/1.jpg" alt="Some image" />
+					</div>
+				</div>
+				<div class="details__item details__item-price">
+					<div class="details__inner details__inner--price">
+						<img src="img/reviews/4.jpg" alt="Some image" />
+					</div>
+				</div>
+				<div class="details__item details__item--close" data-direction="ttb">
+					<div class="details__inner">
+						<button class="action action--close">Close</button>
+					</div>
+				</div>
+			</div><!-- /details -->
+			<div class="details">
+				<div class="details__item details__item-img" data-direction="ttb">
+					<div class="details__inner">
+						<img src="img/small/1.jpg" alt="Some image" />
+					</div>
+				</div>
+				<div class="details__item details__item-sizes">
+					<div class="details__inner details__inner--sizes">
+						<img src="img/reviews/2.jpg" alt="Some image" />
+					</div>
+				</div>
+				<div class="details__item details__item--addtocart" data-direction="ttb">
+					<div class="details__inner">
+						<button class="action action--addtocart">
+							<img src="img/reviews/3.jpg" alt="Some image" />
+						</button>
+					</div>
+				</div>
+				<div class="details__item details__item-colors" data-direction="ttb">
+					<div class="details__inner details__inner--grid details__inner--colors">
+						<img src="img/reviews/1.jpg" alt="Some image" />
+					</div>
+				</div>
+				<div class="details__item details__item-price">
+					<div class="details__inner details__inner--price">
+						<img src="img/reviews/4.jpg" alt="Some image" />
+					</div>
+				</div>
+				<div class="details__item details__item--close" data-direction="ttb">
+					<div class="details__inner">
+						<button class="action action--close">Close</button>
+					</div>
+				</div>
+			</div><!-- /details -->
+			<div class="details">
+				<div class="details__item details__item-img" data-direction="ttb">
+					<div class="details__inner">
+						<img src="img/small/1.jpg" alt="Some image" />
+					</div>
+				</div>
+				<div class="details__item details__item-sizes">
+					<div class="details__inner details__inner--sizes">
+						<img src="img/reviews/2.jpg" alt="Some image" />
+					</div>
+				</div>
+				<div class="details__item details__item--addtocart" data-direction="ttb">
+					<div class="details__inner">
+						<button class="action action--addtocart">
+							<img src="img/reviews/3.jpg" alt="Some image" />
+						</button>
+					</div>
+				</div>
+				<div class="details__item details__item-colors" data-direction="ttb">
+					<div class="details__inner details__inner--grid details__inner--colors">
+						<img src="img/reviews/1.jpg" alt="Some image" />
+					</div>
+				</div>
+				<div class="details__item details__item-price">
+					<div class="details__inner details__inner--price">
+						<img src="img/reviews/4.jpg" alt="Some image" />
+					</div>
+				</div>
+				<div class="details__item details__item--close" data-direction="ttb">
+					<div class="details__inner">
+						<button class="action action--close">Close</button>
+					</div>
+				</div>
+			</div><!-- /details -->
+		</div>
+	</main>
+	<script src="js/imagesloaded.pkgd.min.js"></script>
+	<script src="js/TweenMax.min.js"></script>
+	<script src="js/demo.js"></script>
+</body>
 
-                        TweenMax.to(item, duration, itemAnimOpts);
-                        TweenMax.to(item.querySelector('.details__inner'), duration, innerAnimOpts);
-                    });
-                };
-
-                // Process each one of the boxes..
-                let processing = [];
-                this.DOM.detailsItems.forEach((item,pos) => processing.push(processItem(item,pos)));
-                Promise.all(processing).then(() => {
-                    this.isDetailsOpen = true;
-                    resolve();
-                });
-            });
-        }
-        hideDetails() {
-            return new Promise((resolve, reject) => {
-
-                if ( !this.isDetailsOpen ) {
-                    resolve();
-                    return false;
-                }
-    
-                const processItem = (item,pos) => {
-                    return new Promise((resolve, reject) => {
-                        const duration = pos === 0 ? 0.7 : 0.2;
-                        const ease = pos === 0 ? 'Expo.easeOut' : 'Power2.easeInOut';
-                        const delay = (this.totalDetailItems-pos-1)*0.08;
-                        const direction = item.dataset.direction || 'rtl'; // right to left (rtl) | left to right (ltr) | bottom to top (btt) | top to bottom (ttb).
-                        
-                        let itemAnimOpts = {
-                            ease: ease,
-                            delay: delay
-                        };
-                        
-                        let innerAnimOpts = {
-                            ease: ease,
-                            delay: delay,
-                            onComplete: resolve
-                        };
-
-                        if ( direction === 'rtl' || direction === 'ltr' ) {
-                            itemAnimOpts.x = direction === 'rtl' ? '100%' : '-100%';
-                            itemAnimOpts.y = '0%';
-                            innerAnimOpts.x= direction === 'rtl' ? '-100%' : '100%';
-                            innerAnimOpts.y = '0%';
-                        }
-                        else {
-                            itemAnimOpts.y = direction === 'btt' ? '100%' : '-100%';
-                            itemAnimOpts.x = '0%';
-                            innerAnimOpts.y= direction === 'btt' ? '-100%' : '100%';
-                            innerAnimOpts.x = '0%';
-                        }
-
-                        TweenMax.to(item, duration, itemAnimOpts);
-                        TweenMax.to(item.querySelector('.details__inner'), duration, innerAnimOpts);
-                    });
-                };
-
-                let processing = [];
-                this.DOM.detailsItems.forEach((item,pos) => processing.push(processItem(item,pos)));
-                Promise.all(processing).then(() => {
-                    this.isDetailsOpen = false;
-                    resolve();
-                });
-
-            });
-        }
-    }
-
-    // The navigation class. Controls the .boxnav animations (e.g. pagination animation).
-    class Navigation {
-        constructor(el, settings) {
-            this.DOM = {el: el};
-
-            this.settings = {
-                next: () => {return false;},
-                prev: () => {return false;}
-            }
-            Object.assign(this.settings, settings);
-
-            // Navigation controls (prev and next)
-			this.DOM.prevCtrl = this.DOM.el.querySelector('.boxnav__item--prev');
-            this.DOM.nextCtrl = this.DOM.el.querySelector('.boxnav__item--next');
-            // The current and total pages elements.
-            this.DOM.pagination = {
-                current: this.DOM.el.querySelector('.boxnav__label--current'),
-                total: this.DOM.el.querySelector('.boxnav__label--total')
-            };
-            this.initEvents();
-        }
-        // Updates the current page element value.
-        // Animate the element up, update the value and finally animate it in from bottom up.
-        setCurrent(val, direction) {
-            //this.DOM.pagination.current.innerHTML = val;
-            TweenMax.to(this.DOM.pagination.current, 0.4, {
-                ease: 'Back.easeIn',
-                y: direction === 'right' ? '-100%' : '100%',
-                opacity: 0,
-                onComplete: () => {
-                    this.DOM.pagination.current.innerHTML = val;
-                    TweenMax.to(this.DOM.pagination.current, 0.8, {
-                        ease: 'Expo.easeOut',
-                        startAt: {y: direction === 'right' ? '50%' : '-50%', opacity: 0},
-                        y: '0%',
-                        opacity: 1
-                    });    
-                }
-            });
-        }
-        // Sets the total pages value.
-        setTotal(val) {
-            this.DOM.pagination.total.innerHTML = val;
-        }
-        // Initialize the events on the next/prev controls.
-        initEvents() {
-            this.DOM.prevCtrl.addEventListener('click', () => this.settings.prev());
-            this.DOM.nextCtrl.addEventListener('click', () => this.settings.next());
-        }
-    }
-
-    // The Slideshow class.
-    class Slideshow {
-        constructor(el) {
-            this.DOM = {el: el};
-            // Initialize the navigation instance. When clicking the next or prev ctrl buttons, trigger the navigate function.
-            this.navigation = new Navigation(document.querySelector('.boxnav'), {
-                next: () => this.navigate('right'),
-                prev: () => this.navigate('left')
-            });
-            // The details ctrl button.
-            this.DOM.detailsCtrl = document.querySelector('.action--details');
-            // The details container.
-            this.DOM.detailsWrap = document.querySelector('.details-wrap');
-            // Each group of details boxes for each slide/product.
-            this.DOM.details = Array.from(this.DOM.detailsWrap.querySelectorAll('.details'));
-            // The slides.
-            this.slides = [];
-            // Initialize/Create the slides instances.
-            Array.from(this.DOM.el.querySelectorAll('.slide')).forEach((slideEl,pos) => this.slides.push(new Slide(slideEl, {
-                // this slide's details element.
-                detailsEl: this.DOM.details[pos],
-                // When clicking the close details ctrl button call the closeDetailsBoxes function.
-                onHideDetails: () => {
-                    if ( this.isAnimating ) return;
-                    this.isAnimating = true;
-                    this.closeDetailsBoxes().then(() => this.isAnimating = false);
-                }
-            })));
-            // The total number of slides.
-            this.slidesTotal = this.slides.length;
-            // Set the total number of slides in the navigation box.
-            this.navigation.setTotal(this.slidesTotal);
-            // At least 2 slides to continue...
-            if ( this.slidesTotal < 2 ) {
-                return false;
-            }
-            // Current slide position.
-            this.current = 0;
-            // Initialize the slideshow.
-            this.init();
-        }
-        // Set the current slide and initialize some events.
-        init() {
-            this.slides[this.current].setCurrent();
-            this.initEvents();
-        }
-        initEvents() {
-            // Open the details boxes.
-            this.DOM.detailsCtrl.addEventListener('click', () => this.openDetailsBoxes());
-        }
-        openDetailsBoxes() {
-            if ( this.isAnimating ) return;
-            this.isAnimating = true;
-            
-            // Overlay
-            this.DOM.el.classList.add('slideshow--details');
-            
-            this.DOM.detailsWrap.classList.add('details-wrap--open');
-            this.DOM.details[this.current].classList.add('details--current');
-            this.slides[this.current].showDetails().then(() => this.isAnimating = false);
-        }
-        closeDetailsBoxes() {
-            return new Promise((resolve, reject) => {
-                // Overlay.
-                this.DOM.el.classList.remove('slideshow--details');
-                this.slides[this.current].hideDetails().then(() => {
-                    this.DOM.details[this.current].classList.remove('details--current');
-                    this.DOM.detailsWrap.classList.remove('details-wrap--open');
-                    resolve()
-                });
-            });
-        }
-        // Navigate the slideshow.
-        navigate(direction) {
-            // If animating return.
-            if ( this.isAnimating ) return;
-            this.isAnimating = true;
-
-            // The next/prev slide´s position.
-            const nextSlidePos = direction === 'right' ? 
-                    this.current < this.slidesTotal-1 ? this.current+1 : 0 :
-                    this.current > 0 ? this.current-1 : this.slidesTotal-1;
-
-            // Close the details boxes (if open) and then hide the current slide and show the next/previous one.
-            this.closeDetailsBoxes().then(() => {
-                // Update the current page element.
-                this.navigation.setCurrent(nextSlidePos+1, direction);
-                
-                Promise.all([this.slides[this.current].hide(direction), this.slides[nextSlidePos].show(direction)])
-                       .then(() => {
-                            // Update current.
-                            this.slides[this.current].setCurrent(false);
-                            this.current = nextSlidePos;
-                            this.slides[this.current].setCurrent();
-                            this.isAnimating = false;
-                       });
-            });
-        }
-    }
-
-    // Initialize the slideshow
-    const slideshow = new Slideshow(document.querySelector('.slideshow'));
-    // Preload all the images..
-    imagesLoaded(document.querySelectorAll('.slide__img'), {background: true}, () => document.body.classList.remove('loading'));
-}
+</html>
