@@ -1311,4 +1311,8 @@ main {
 		position: inherit;
 		margin: 5px;
 	}
+
+	.h1_special {
+		display: none;
+	}
 }
