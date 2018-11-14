@@ -305,7 +305,7 @@
         }
         initEvents() {
             // Open the details boxes.
-            this.DOM.detailsCtrl.addEventListener('click', () => this.openDetailsBoxes());
+            // this.DOM.detailsCtrl.addEventListener('click', () => this.openDetailsBoxes());
         }
         openDetailsBoxes() {
             if ( this.isAnimating ) return;
