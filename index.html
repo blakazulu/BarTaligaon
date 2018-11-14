@@ -10,6 +10,10 @@
 	<meta name="author" content="Codrops" />
 	<link rel="stylesheet" type="text/css" href="css/base.css" />
 	<link href="https://fonts.googleapis.com/css?family=Varela+Round&amp;subset=hebrew" rel="stylesheet">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 	<script>
 		document.documentElement.className = "js";
 		var supportsCssVars = function () {
@@ -17,7 +21,7 @@
 			return t.innerHTML = "root: { --tmp-var: bold; }", document.head.appendChild(t), e = !!(window.CSS && window.CSS.supports &&
 				window.CSS.supports("font-weight", "var(--tmp-var)")), t.parentNode.removeChild(t), e
 		};
-		supportsCssVars() || alert("Please view this demo in a modern browser that supports CSS Variables.");
+		supportsCssVars() || alert("Please view this in a modern browser that supports CSS Variables.");
 	</script>
 </head>
 
@@ -57,8 +61,8 @@
 
 		<div class="content content--fixed">
 			<div class="codrops-header">
-					<h1 class="h1_special" data-title="בר טליגאון"> <a href="#"> בר טליגאון </a> </h1>
-					<h1 class="h1_special_small" data-title="בר טליגאון" hidden><a href="#"> בר טליגאון</a></h1>
+				<h1 class="h1_special" data-title="בר טליגאון"> <a href="#"> בר טליגאון </a> </h1>
+				<h1 class="h1_special_small" data-title="בר טליגאון" hidden><a href="#"> בר טליגאון</a></h1>
 				<!-- <h2 class="letter slide_title_blue codrops-header__title">בר טליגאון - טכנאי מחשבים</h2> -->
 			</div>
 			<div class="page-header">
@@ -146,9 +150,10 @@
 				</svg>
 			</button>
 		</nav>
-		<button class="button button_red action action--details">+</button>
+		<button class="button button_red action action--details" data-toggle="modal" data-target="#myModal">+</button>
+
 		<!-- details -->
-		<div class="details-wrap">
+		<div class="details-wrap" hidden>
 			<div class="details">
 				<div class="details__item details__item-img" data-direction="ttb">
 					<div class="details__inner">
@@ -251,6 +256,7 @@
 					</div>
 				</div>
 			</div><!-- /details -->
+
 			<div class="details">
 				<div class="details__item details__item-img" data-direction="ttb">
 					<div class="details__inner">
@@ -286,6 +292,139 @@
 				</div>
 			</div><!-- /details -->
 		</div>
+
+		<!-- The Modal -->
+		<div class="modal fade" id="myModal">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+
+					<!-- Modal Header -->
+					<div class="modal-header" dir="rtl">
+						<h4 class="modal-title" style="text-align:center">השאר פרטים ונחזור אליך</h4>
+						<!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+					</div>
+
+					<!-- Modal body -->
+					<div class="modal-body">
+						<!-- <form action="https://postmail.invotes.com/send" method="post" id="email_form">
+								<input type="text" name="subject" placeholder="נושא" />
+								<textarea name="text" placeholder="הודעה"></textarea>
+								<input type="hidden" name="access_token" value="tvjevmzq4dalvoyakvao0ihu" />
+								<input type="hidden" name="success_url" value=".?message=Email+Successfully+Sent%21&isError=0" />
+								<input type="hidden" name="error_url" value=".?message=Email+could+not+be+sent.&isError=1" />
+								<input type="email" name="reply_to" placeholder="המייל שלך" />
+								<input type="text" name="extra_phone_number" placeholder="מספר טלפון" />
+					
+								<input id="submit_form" type="submit" value="Send" />
+								<p>Powered by <a href="https://postmail.invotes.com" target="_blank">PostMail</a></p>
+							</form> -->
+						<!-- Special version of Bootstrap that only affects content wrapped in .bootstrap-iso -->
+						<link rel="stylesheet" href="https://formden.com/static/cdn/bootstrap-iso.css" />
+
+						<!-- Inline CSS based on choices in "Settings" tab -->
+						<style>.bootstrap-iso .formden_header h2, .bootstrap-iso .formden_header p, .bootstrap-iso form{font-family: Arial, Helvetica, sans-serif; color: black}.bootstrap-iso form button, .bootstrap-iso form button:hover{color: white !important;} .asteriskField{color: red;}.bootstrap-iso form .input-group-addon {color:#555555; background-color: #bfbaba; border-radius: 4px; padding-left:12px}</style>
+
+						<!-- HTML Form (wrapped in a .bootstrap-iso div) -->
+						<div class="bootstrap-iso">
+							<div class="container-fluid">
+								<div class="row">
+									<div class="col-xs-12">
+										<form action="https://postmail.invotes.com/send" method="post" id="email_form">
+											<div class="form-group ">
+												<label class="control-label " for="subject">
+													נושא
+												</label>
+												<input class="form-control" type="text" dir="rtl" name="subject" placeholder="נושא" />
+												<input type="hidden" name="access_token" value="649v7qdw1mirunc5ayyp18tf" />
+												<input type="hidden" name="success_url" value=".?message=Email+Successfully+Sent%21&isError=0" />
+												<input type="hidden" name="error_url" value=".?message=Email+could+not+be+sent.&isError=1" />
+											</div>
+											<div class="form-group ">
+												<label class="control-label requiredField" for="email">
+													אימייל
+												</label>
+												<input class="form-control" dir="rtl" type="email" name="reply_to" placeholder="המייל שלך" />
+											</div>
+											<div class="form-group ">
+												<label class="control-label requiredField" for="number">
+													מספר טלפון
+												</label>
+												<input class="form-control"  dir="rtl" type="text" name="extra_phone_number" placeholder="מספר טלפון" />
+											</div>
+											<div class="form-group ">
+												<label class="control-label requiredField" for="message">
+													הודעה
+												</label>
+												<textarea class="form-control" dir="rtl" cols="40" rows="10" name="text" placeholder="הודעה"></textarea>
+											</div>
+											<div class="form-group">
+												<div>
+													<input class="btn btn-primary btn-lg btn-block" id="submit_form" type="submit"value="שלח" />
+												</div>
+											</div>
+										</form>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="bootstrap-iso mobile-site" style="display: none">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-xs-12">
+						<form action="https://postmail.invotes.com/send" method="post" id="email_form">
+							<div class="form-group ">
+								<label class="control-label " for="subject">
+									נושא
+								</label>
+								<input class="form-control" type="text" dir="rtl" name="subject" placeholder="נושא" />
+								<input type="hidden" name="access_token" value="649v7qdw1mirunc5ayyp18tf" />
+								<input type="hidden" name="success_url" value=".?message=Email+Successfully+Sent%21&isError=0" />
+								<input type="hidden" name="error_url" value=".?message=Email+could+not+be+sent.&isError=1" />
+							</div>
+							<div class="form-group ">
+								<label class="control-label requiredField" for="email">
+									אימייל
+								</label>
+								<input class="form-control" dir="rtl" type="email" name="reply_to" placeholder="המייל שלך" />
+							</div>
+							<div class="form-group ">
+								<label class="control-label requiredField" for="number">
+									מספר טלפון
+								</label>
+								<input class="form-control"  dir="rtl" type="text" name="extra_phone_number" placeholder="מספר טלפון" />
+							</div>
+							<div class="form-group ">
+								<label class="control-label requiredField" for="message">
+									הודעה
+								</label>
+								<textarea class="form-control" dir="rtl" cols="40" rows="10" name="text" placeholder="הודעה"></textarea>
+							</div>
+							<div class="form-group">
+								<div>
+									<input class="btn btn-primary btn-lg btn-block" id="submit_form" type="submit"value="שלח" />
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- optional, prevents the submit button from being pressed more than once -->
+		<script>
+			var submitButton = document.getElementById("submit_form");
+			var form = document.getElementById("email_form");
+			form.addEventListener("submit", function (e) {
+				setTimeout(function () {
+					submitButton.value = "Sending...";
+					submitButton.disabled = true;
+				}, 1);
+			});
+		</script>
 	</main>
 	<script src="js/imagesloaded.pkgd.min.js"></script>
 	<script src="js/TweenMax.min.js"></script>
